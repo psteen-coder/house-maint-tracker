@@ -33,28 +33,42 @@ cd house-maint-tracker
 
 ## 3. Backend (required)
 
-From the repo root:
+### Windows PowerShell (copy-paste)
+
+You are already in `...\house-maint-tracker\backend` if the prompt ends in `\backend>`.
+
+Do **not** run `source` — that is bash. PowerShell:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+If activation fails with “running scripts is disabled on this system”:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+.\.venv\Scripts\Activate.ps1
+```
+
+Skip the venv activate entirely if you prefer:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+Windows cmd.exe (not PowerShell): `.venv\Scripts\activate.bat`
+
+### Linux / macOS
 
 ```bash
 cd backend
 python3 -m venv .venv
-```
-
-Activate the venv:
-
-- Linux / macOS: `source .venv/bin/activate`
-- Windows cmd: `.venv\Scripts\activate.bat`
-- Windows PowerShell: `.venv\Scripts\Activate.ps1`
-
-Install:
-
-```bash
+source .venv/bin/activate
 pip install -r requirements.txt
-```
-
-Start:
-
-```bash
 uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 

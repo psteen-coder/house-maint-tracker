@@ -27,11 +27,41 @@ Web app + SQLite backend. Run it on a desktop or a small always-on box. The same
 
 Needs Python 3.12+ only. A production frontend is already in `backend/app/static/`.
 
+### Windows PowerShell
+
+`source` is a bash command — it does not exist in PowerShell. From the `backend` folder:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+If `Activate.ps1` is blocked (`running scripts is disabled`):
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+Or skip activation and call the venv Python directly:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+One-shot: `powershell -File scripts\run-local.ps1`
+
+Then open http://127.0.0.1:8000
+
+### Linux / macOS
+
 ```bash
 git clone https://github.com/psteen-coder/house-maint-tracker.git
 cd house-maint-tracker/backend
 python3 -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
+source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
