@@ -38,20 +38,52 @@ pip install -r requirements.txt
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-If `Activate.ps1` is blocked (`running scripts is disabled`):
+If `Activate.ps1` is blocked (`running scripts is disabled on this system`):
 
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 ```
 
-Or skip activation and call the venv Python directly:
+### One-shot script (Windows)
+
+This is the easiest path. It creates the venv, installs packages, and starts the server. **Do not** run it from `backend\` — run it from the folder that contains both `scripts` and `backend`.
+
+1. Open **PowerShell** (not Git Bash, not cmd).
+2. Go to the project root (zip extract or git clone):
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+cd "$env:USERPROFILE\Downloads\house-maint-tracker-main\house-maint-tracker"
 ```
 
-One-shot: `powershell -File scripts\run-local.ps1`
+If you cloned with git instead of a zip:
+
+```powershell
+cd "$env:USERPROFILE\git\house-maint-tracker"
+```
+
+Confirm you see `scripts` and `backend`:
+
+```powershell
+dir
+```
+
+3. Run the script. `-ExecutionPolicy Bypass` is only for this one file — it does not change your PC policy:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\run-local.ps1
+```
+
+4. Wait until it prints `Open http://127.0.0.1:8000`. **Leave this window open.**
+5. In a browser: http://127.0.0.1:8000  
+   Login: `patrick@1944dinius.local` / `adminpass`
+6. Stop: focus the PowerShell window and press `Ctrl+C`.
+
+| Error | Fix |
+|-------|-----|
+| `cannot find ...\scripts\run-local.ps1` | You are in `backend`. `cd ..` then retry. |
+| `running scripts is disabled` | You omitted `-ExecutionPolicy Bypass`. Use the command in step 3 as written. |
+| `python` not found | Install Python 3.12 from python.org; tick **Add python.exe to PATH**; close and reopen PowerShell. |
+| `Failed building wheel for pydantic-core` | Python 3.14 has no wheel. Install 3.12, delete `backend\.venv`, run the script again. |
 
 Then open http://127.0.0.1:8000
 

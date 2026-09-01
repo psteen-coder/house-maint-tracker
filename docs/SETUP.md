@@ -33,7 +33,30 @@ cd house-maint-tracker
 
 ## 3. Backend (required)
 
-### Windows PowerShell (copy-paste)
+### One-shot script (Windows PowerShell)
+
+Easiest: from the **project root** (the folder that contains `scripts` and `backend`), not from `backend`.
+
+Zip download example:
+
+```powershell
+cd "$env:USERPROFILE\Downloads\house-maint-tracker-main\house-maint-tracker"
+powershell -ExecutionPolicy Bypass -File .\scripts\run-local.ps1
+```
+
+Git clone example:
+
+```powershell
+cd path\to\house-maint-tracker
+powershell -ExecutionPolicy Bypass -File .\scripts\run-local.ps1
+```
+
+`-ExecutionPolicy Bypass` applies only to this run. Leave the window open, then open http://127.0.0.1:8000  
+Stop with Ctrl+C.
+
+If PowerShell says it cannot find the script, you are in `backend` — `cd ..` and retry.
+
+### Manual Windows PowerShell (copy-paste)
 
 You are already in `...\house-maint-tracker\backend` if the prompt ends in `\backend>`.
 
