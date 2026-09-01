@@ -156,3 +156,4 @@ Restart: same `uvicorn` command from `backend/` with the venv active. Existing u
 | Blank page / old Vite starter | You are not serving `backend/app/static`; run `npm run build` in `frontend/` then restart uvicorn |
 | Login fails | Use the seeded emails exactly, including `@1944dinius.local` |
 | Weather button errors | Machine needs outbound HTTPS to `api.open-meteo.com` |
+| `Failed building wheel for pydantic-core` | Python 3.14 (or another version with no wheel) is compiling Rust. Stay in the venv and run `python -m pip install --upgrade pip "pydantic>=2.12" -r requirements.txt`. Prefer Python 3.12 or 3.13 from python.org if that still fails. Do not install Rust just for this app. |
