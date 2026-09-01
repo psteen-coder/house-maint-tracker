@@ -44,46 +44,35 @@ If `Activate.ps1` is blocked (`running scripts is disabled on this system`):
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 ```
 
-### One-shot script (Windows)
+### One-shot (Windows)
 
-This is the easiest path. It creates the venv, installs packages, and starts the server. **Do not** run it from `backend\` — run it from the folder that contains both `scripts` and `backend`.
+Your first GitHub zip **does not contain** `scripts\run-local.ps1`. That is why `-File` said the argument does not exist.
 
-1. Open **PowerShell** (not Git Bash, not cmd).
-2. Go to the project root (zip extract or git clone):
-
-```powershell
-cd "$env:USERPROFILE\Downloads\house-maint-tracker-main\house-maint-tracker"
-```
-
-If you cloned with git instead of a zip:
+**Use this from `backend` right now** (no extra file needed):
 
 ```powershell
-cd "$env:USERPROFILE\git\house-maint-tracker"
+cd "$env:USERPROFILE\Downloads\house-maint-tracker-main\house-maint-tracker\backend"
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install "pydantic>=2.12" "fastapi>=0.115.6" "uvicorn[standard]>=0.34" "sqlalchemy>=2.0.36" "httpx>=0.28.1"
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Confirm you see `scripts` and `backend`:
+Leave the window open. Open http://127.0.0.1:8000
 
-```powershell
-dir
-```
+After you download a **new** zip (or `git pull`) from GitHub main, you can instead:
 
-3. Run the script. `-ExecutionPolicy Bypass` is only for this one file — it does not change your PC policy:
+- Double-click `backend\run.cmd` in File Explorer, **or**
+- From `backend`: `powershell -ExecutionPolicy Bypass -File .\run.ps1`
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\run-local.ps1
-```
-
-4. Wait until it prints `Open http://127.0.0.1:8000`. **Leave this window open.**
-5. In a browser: http://127.0.0.1:8000  
-   Login: `patrick@1944dinius.local` / `adminpass`
-6. Stop: focus the PowerShell window and press `Ctrl+C`.
+The repo-root command `.\scripts\run-local.ps1` only works if that file is on disk (`dir scripts` must list it).
 
 | Error | Fix |
 |-------|-----|
-| `cannot find ...\scripts\run-local.ps1` | You are in `backend`. `cd ..` then retry. |
-| `running scripts is disabled` | You omitted `-ExecutionPolicy Bypass`. Use the command in step 3 as written. |
+| `argument ... run-local.ps1 ... does not exist` | Old zip. Paste the `backend` block above, or get a new zip and use `backend\run.cmd`. |
+| `running scripts is disabled` | Use `-ExecutionPolicy Bypass` or double-click `run.cmd`. |
 | `python` not found | Install Python 3.12 from python.org; tick **Add python.exe to PATH**; close and reopen PowerShell. |
-| `Failed building wheel for pydantic-core` | Python 3.14 has no wheel. Install 3.12, delete `backend\.venv`, run the script again. |
+| `Failed building wheel for pydantic-core` | Python 3.14. Install 3.12, delete `backend\.venv`, run again. |
 
 Then open http://127.0.0.1:8000
 
