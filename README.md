@@ -2,7 +2,7 @@
 
 Household maintenance tracker for **1944 Dinius Road, Raisin Township, MI**.
 
-Web app + SQLite backend you can run on a desktop or a small server. Same UI installs as an Android PWA, and an Android WebView project wraps it.
+Web app + SQLite backend. Run it on a desktop or a small always-on box. The same UI installs as an Android PWA; `android/` is a WebView wrapper for a dedicated app.
 
 ## Features
 
@@ -11,48 +11,45 @@ Web app + SQLite backend you can run on a desktop or a small server. Same UI ins
 - Kanban: due within a week · in progress · completed in the past week
 - Month calendar forecast
 - Light, dark, forest, terracotta, and slate themes
-- Open-Meteo weather feed; outdoor tasks shift ±3 days when the scheduled day is a bad weather match
+- Open-Meteo weather feed; outdoor tasks shift ±3 days when the scheduled day fails dry/temp/wind prefs
 
-## Run locally
+## Docs
+
+| Doc | What it covers |
+|-----|----------------|
+| [docs/SETUP.md](docs/SETUP.md) | First-time install on a desktop (Linux / macOS / Windows) |
+| [docs/SERVER.md](docs/SERVER.md) | Run as a LAN/server service (systemd, bind address, backup) |
+| [docs/ANDROID.md](docs/ANDROID.md) | PWA install + Android Studio WebView |
+| [docs/OPERATIONS.md](docs/OPERATIONS.md) | Roles, weather reschedule, house location, passwords |
+| [docs/API.md](docs/API.md) | HTTP API reference |
+
+## Quick start (built UI, one process)
+
+Needs Python 3.12+ only. A production frontend is already in `backend/app/static/`.
 
 ```bash
-# backend
-cd backend
+git clone https://github.com/psteen-coder/house-maint-tracker.git
+cd house-maint-tracker/backend
 python3 -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-
-# frontend (dev, proxies /api → :8000)
-cd frontend
-npm install
-npm run dev
+uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Open http://127.0.0.1:5173
+Or: `bash scripts/run-local.sh`
 
-Production-style (API serves the built UI):
+Open http://127.0.0.1:8000
 
-```bash
-cd frontend && npm install && npm run build
-cd ../backend && .venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
-```
+| Person  | Email                    | Password   | Role   |
+|---------|--------------------------|------------|--------|
+| Patrick | patrick@1944dinius.local | adminpass  | admin  |
+| Alex    | alex@1944dinius.local    | memberpass | member |
+| Jamie   | jamie@1944dinius.local   | viewerpass | viewer |
 
-Then open http://127.0.0.1:8000
-
-## Seeded logins
-
-| Person  | Email                       | Password    | Role   |
-|---------|-----------------------------|-------------|--------|
-| Patrick | patrick@1944dinius.local    | adminpass   | admin  |
-| Alex    | alex@1944dinius.local       | memberpass  | member |
-| Jamie   | jamie@1944dinius.local      | viewerpass  | viewer |
-
-Change these after first login if you put the box on a network.
+Change these before exposing the app on a network. See [docs/OPERATIONS.md](docs/OPERATIONS.md).
 
 SQLite file: `backend/house_maint.db` (override with `HOUSE_MAINT_DB`).
-
-House lat/lon is seeded from OSM for 1944 Dinius Road (41.9849515, -83.9916572).
+House coordinates: 41.9849515, -83.9916572 (OSM: 1944 Dinius Road).
 
 ## Tests
 
@@ -61,11 +58,6 @@ cd backend
 .venv/bin/pytest -q
 ```
 
-## Android
-
-- **PWA:** in Chrome on Android, open the site → Add to Home screen (`manifest.webmanifest` + service worker).
-- **WebView project:** `android/` — open in Android Studio. Default URL is `http://10.0.2.2:8000` (emulator → host). Change `MainActivity.APP_URL` for a LAN/server deploy.
-
-## GitHub
+## Repo
 
 https://github.com/psteen-coder/house-maint-tracker
